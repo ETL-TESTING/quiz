@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>Quizdown - Dynamic Quiz</title>
-  <script src="https://unpkg.com/quizdown@latest/dist/quizdown.js"></script>
+
+  <!-- Load Quizdown styles -->
   <link rel="stylesheet" href="https://unpkg.com/quizdown@latest/dist/quizdown.css" />
+
+  <!-- Load Quizdown library -->
+  <script src="https://unpkg.com/quizdown@latest/dist/quizdown.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
@@ -15,7 +20,7 @@
   </div>
 
   <script>
-    async function loadQuizMarkdown() {
+    window.onload = async function loadQuizMarkdown() {
       try {
         const response = await fetch('./resources/quiz.md');
         if (!response.ok) throw new Error('Failed to fetch quiz markdown.');
@@ -24,11 +29,10 @@
 
         const quizContainer = document.getElementById('quiz');
 
-        // Create a <script type="text/markdown"> element with the fetched content
+        // Create a <script type="text/markdown"> with the markdown content
         const scriptEl = document.createElement('script');
         scriptEl.type = 'text/markdown';
         scriptEl.textContent = markdown;
-
         quizContainer.appendChild(scriptEl);
 
         // Initialize and render Quizdown
@@ -43,8 +47,6 @@
         document.getElementById('quiz').innerHTML = '<p>Could not load the quiz.</p>';
       }
     }
-
-    loadQuizMarkdown();
   </script>
 </body>
 </html>
