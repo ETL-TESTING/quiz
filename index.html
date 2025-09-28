@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <title>Quizdown - Dynamic Quiz</title>
 
-  <!-- Quizdown CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/quizdown@latest/dist/quizdown.css" />
+  <!-- ✅ Corrected CSS Path -->
+  <link rel="stylesheet" href="https://unpkg.com/quizdown@latest/public/build/quizdown.css" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
@@ -17,7 +17,7 @@
   </div>
 
   <script>
-    // Dynamically load the quizdown script
+    // ✅ Dynamically load quizdown from the working path
     function loadScript(src) {
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -30,23 +30,24 @@
 
     async function loadQuizMarkdown() {
       try {
-        // 1. Wait for quizdown script to load
-        await loadScript('https://unpkg.com/quizdown@latest/dist/quizdown.js');
+        // ✅ Load correct quizdown.js script
+        await loadScript('https://unpkg.com/quizdown@latest/public/build/quizdown.js');
 
-        // 2. Fetch the Markdown quiz file
+        // ✅ Fetch Markdown quiz content
         const response = await fetch('./resources/quiz.md');
         if (!response.ok) throw new Error('Failed to fetch quiz markdown.');
 
         const markdown = await response.text();
 
-        // 3. Inject the Markdown into the page
         const quizContainer = document.getElementById('quiz');
+
+        // ✅ Insert quiz content as <script type="text/markdown">
         const scriptEl = document.createElement('script');
         scriptEl.type = 'text/markdown';
         scriptEl.textContent = markdown;
         quizContainer.appendChild(scriptEl);
 
-        // 4. Initialize and render Quizdown
+        // ✅ Render Quizdown
         quizdown.init({
           perQuestion: true,
           allowRetry: true,
@@ -59,7 +60,6 @@
       }
     }
 
-    // Run the quiz loader after DOM is ready
     window.addEventListener('DOMContentLoaded', loadQuizMarkdown);
   </script>
 </body>
