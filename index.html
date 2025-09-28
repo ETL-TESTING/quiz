@@ -4,11 +4,8 @@
   <meta charset="UTF-8" />
   <title>Quizdown - Dynamic Quiz</title>
 
-  <!-- Load Quizdown styles -->
+  <!-- Quizdown CSS -->
   <link rel="stylesheet" href="https://unpkg.com/quizdown@latest/dist/quizdown.css" />
-
-  <!-- Load Quizdown library -->
-  <script src="https://unpkg.com/quizdown@latest/dist/quizdown.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
@@ -20,22 +17,36 @@
   </div>
 
   <script>
-    window.onload = async function loadQuizMarkdown() {
+    // Dynamically load the quizdown script
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+        document.head.appendChild(script);
+      });
+    }
+
+    async function loadQuizMarkdown() {
       try {
+        // 1. Wait for quizdown script to load
+        await loadScript('https://unpkg.com/quizdown@latest/dist/quizdown.js');
+
+        // 2. Fetch the Markdown quiz file
         const response = await fetch('./resources/quiz.md');
         if (!response.ok) throw new Error('Failed to fetch quiz markdown.');
 
         const markdown = await response.text();
 
+        // 3. Inject the Markdown into the page
         const quizContainer = document.getElementById('quiz');
-
-        // Create a <script type="text/markdown"> with the markdown content
         const scriptEl = document.createElement('script');
         scriptEl.type = 'text/markdown';
         scriptEl.textContent = markdown;
         quizContainer.appendChild(scriptEl);
 
-        // Initialize and render Quizdown
+        // 4. Initialize and render Quizdown
         quizdown.init({
           perQuestion: true,
           allowRetry: true,
@@ -47,6 +58,9 @@
         document.getElementById('quiz').innerHTML = '<p>Could not load the quiz.</p>';
       }
     }
+
+    // Run the quiz loader after DOM is ready
+    window.addEventListener('DOMContentLoaded', loadQuizMarkdown);
   </script>
 </body>
 </html>
